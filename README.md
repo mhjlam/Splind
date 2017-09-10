@@ -1,2 +1,2 @@
-# spliner
+# curvus
 Quadratic and cubic uniform or non-uniform B-splines

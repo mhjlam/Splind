@@ -20,7 +20,7 @@
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{D29CDC83-9C7D-4E26-A66F-39B002287A0C}</ProjectGuid>
-    <RootNamespace>spliner</RootNamespace>
+    <RootNamespace>curvus</RootNamespace>
     <WindowsTargetPlatformVersion>10.0.15063.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
