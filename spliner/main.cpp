@@ -1,17 +1,12 @@
 /*
- *	B-SPLINES
+ * SPLINER
  *
- *	Maurits Lam
- *	May 2016
+ * Author	Maurits Lam
+ * Date		September 2017
  *
- * Description:
- * 	Interactive B-splines curves using OpenGL (fixed pipeline).
- *	
- * Features:
- *  	- Define the number and the locations of the control points (from 1 to 10 points)
- * 		- Modify the location of the control points.
- * 		- Choose the degree of the polynomial: quadratic or cubic.
- * 		- Choose uniform or non-uniform b-spline.
+ * Description
+ * 	Quadratic and cubic uniform and non-uniform B-splines.
+ *	Uses fixed function pipeline OpenGL.
  */
 
 #include "spliner.h"
