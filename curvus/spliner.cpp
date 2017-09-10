@@ -98,7 +98,7 @@ void spliner::mouse_motion(int x, int y)
 	if (mode == MOUSE_MODE_DRAG) move_cp(glm::vec2(x, y));
 }
 
-void spliner::menu_event(int option)
+void spliner::menu_select(int option)
 {
 	switch (option)
 	{

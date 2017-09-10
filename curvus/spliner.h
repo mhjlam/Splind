@@ -30,7 +30,7 @@ public:
 
 	void mouse_click(int button, int state, int x, int y);
 	void mouse_motion(int x, int y);
-	void menu_event(int option);
+	void menu_select(int option);
 
 	void draw();
 	void clear_scene();

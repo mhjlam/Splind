@@ -62,7 +62,7 @@ int main(int argc, char* argv[])
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB);
 	glutInitWindowSize(WIDTH, HEIGHT);
 	glutInitWindowPosition(100, 100);
-	glutCreateWindow("spliner");
+	glutCreateWindow("curvus");
 	glDisable(GL_DEPTH_TEST);
 
 	// background color
