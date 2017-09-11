@@ -18,6 +18,14 @@
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\constants.h" />
+    <ClInclude Include="src\spliner.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\spliner.cpp" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{D29CDC83-9C7D-4E26-A66F-39B002287A0C}</ProjectGuid>
     <RootNamespace>curvus</RootNamespace>
@@ -157,14 +165,6 @@
       <Command>xcopy /y /d  "$(SolutionDir)freeglut-3.0.0\bin\x64\*.dll" "$(OutDir)"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
-  <ItemGroup>
-    <ClInclude Include="constants.h" />
-    <ClInclude Include="spliner.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="spliner.cpp" />
-    <ClCompile Include="main.cpp" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
