@@ -1,22 +1,22 @@
-#include "spliner.h"
+#include "wavy.h"
+
 #include <sstream>
-#include <vec3.hpp>
+#include <glm/vec3.hpp>
 #include <GL/freeglut.h>
 
-spliner::spliner()
+wavy::wavy()
 {
 	acp = -1;
 	mode = MOUSE_MODE_NONE;
 	degree = DEGREE_QUADRATIC;
-	uniformity = UNIFORM;
 }
 
-spliner::~spliner()
+wavy::~wavy()
 {
 	clear_scene();
 }
 
-void spliner::add_cp(glm::vec2 p)
+void wavy::add_cp(glm::vec2 p)
 {
 	// cannot exceed maximum number of allowed control points
 	if (cps.size() == MAX_CPTS) return;
@@ -33,7 +33,7 @@ void spliner::add_cp(glm::vec2 p)
 	spline();			// Basis functions will be recalculated completely
 }
 
-void spliner::move_cp(glm::vec2 p)
+void wavy::move_cp(glm::vec2 p)
 {
 	if (acp != -1 && acp < (int)cps.size())
 	{
@@ -45,7 +45,7 @@ void spliner::move_cp(glm::vec2 p)
 	spline();	// Basis functions will be recalculated completely
 }
 
-bool spliner::select_cp(glm::vec2 p)
+bool wavy::select_cp(glm::vec2 p)
 {
 	if (mode != MOUSE_MODE_NONE) return false;
 
@@ -66,7 +66,7 @@ bool spliner::select_cp(glm::vec2 p)
 	return false;
 }
 
-void spliner::mouse_click(int button, int state, int x, int y) // (x,y) coordinates of the mouse relative to the upper left corner
+void wavy::mouse_click(int button, int state, int x, int y) // (x,y) coordinates of the mouse relative to the upper left corner
 {
 	if (state == GLUT_UP)
 	{
@@ -88,7 +88,7 @@ void spliner::mouse_click(int button, int state, int x, int y) // (x,y) coordina
 	}
 }
 
-void spliner::mouse_motion(int x, int y)
+void wavy::mouse_motion(int x, int y)
 {
 	// update mouse position
 	mpos.x = (float)x;
@@ -98,7 +98,7 @@ void spliner::mouse_motion(int x, int y)
 	if (mode == MOUSE_MODE_DRAG) move_cp(glm::vec2(x, y));
 }
 
-void spliner::menu_select(int option)
+void wavy::menu_select(int option)
 {
 	switch (option)
 	{
@@ -114,50 +114,42 @@ void spliner::menu_select(int option)
 			spline();
 		break;
 
-		case MENU_UNIFORMITY: // switch uniformity
-			(uniformity == UNIFORM) ? uniformity = NON_UNIFORM : uniformity = UNIFORM;
-
-			// recalculate all knot values and basis functions
-			knot_vector(true);
-			spline();
-		break;
-
 		case MENU_CP_LINES:
-			draw_cp_lines = !draw_cp_lines;
+			draw_cps = !draw_cps;
 			break;
 	}
 }
 
-void spliner::clear_scene()
+void wavy::clear_scene()
 {
 	t.clear();		// clear knot vectors
 	q.clear();		// clear segments
 	cps.clear(); 	// clear control points
 }
 
-void spliner::draw()
+void wavy::draw()
 {
 	// draw control points
-	for (auto cp : cps)
+	if (draw_cps)
 	{
-		glColor3f(0.0f, 0.0f, 0.0f);
-
-		if (acp != -1 && acp < (int)cps.size() && cp == cps[acp])
-			glColor3f(1.0f, 0.0f, 0.0f);
-
-		glBegin(GL_QUADS);
+		for (auto cp : cps)
 		{
-			glVertex2f(cp.x - (CPT_SIZE / 2), cp.y - (CPT_SIZE / 2));
-			glVertex2f(cp.x + (CPT_SIZE / 2), cp.y - (CPT_SIZE / 2));
-			glVertex2f(cp.x + (CPT_SIZE / 2), cp.y + (CPT_SIZE / 2));
-			glVertex2f(cp.x - (CPT_SIZE / 2), cp.y + (CPT_SIZE / 2));
-		}
-		glEnd();
-	}
+			glColor3f(0.0f, 0.0f, 0.0f);
 
-	// draw lines between control points
-	if (draw_cp_lines)
-	{
+			if (acp != -1 && acp < (int)cps.size() && cp == cps[acp])
+				glColor3f(1.0f, 0.0f, 0.0f);
+
+			glBegin(GL_QUADS);
+			{
+				glVertex2f(cp.x - (CPT_SIZE / 2), cp.y - (CPT_SIZE / 2));
+				glVertex2f(cp.x + (CPT_SIZE / 2), cp.y - (CPT_SIZE / 2));
+				glVertex2f(cp.x + (CPT_SIZE / 2), cp.y + (CPT_SIZE / 2));
+				glVertex2f(cp.x - (CPT_SIZE / 2), cp.y + (CPT_SIZE / 2));
+			}
+			glEnd();
+		}
+
+		// draw lines between control points
 		if (cps.size() > 1) // at least 2 points to draw a line between
 		{
 			glColor3f(0.0f, 0.0f, 0.0f);
@@ -182,7 +174,7 @@ void spliner::draw()
 	glLineWidth(1.0f);
 }
 
-void spliner::draw_ui()
+void wavy::draw_ui()
 {
 	std::stringstream ss;
 	ss << "Coordinates: (" << mpos.x << ", " << mpos.y << ")";
@@ -192,14 +184,9 @@ void spliner::draw_ui()
 	ss << "Degree: ";
 	degree == DEGREE_QUADRATIC ? ss << "quadratic" : ss << "cubic";
 	write_text(ss.str(), 1, 25);
-
-	std::stringstream().swap(ss);
-	ss << "Uniformity: ";
-	uniformity == UNIFORM ? ss << "uniform" : ss << "non-uniform";
-	write_text(ss.str(), 1, 40);
 }
 
-void spliner::write_text(std::string s, unsigned int x, unsigned int y)
+void wavy::write_text(std::string s, unsigned int x, unsigned int y)
 {
 	glColor3f(0.0f, 0.0f, 0.0f);
 	glRasterPos2i(x, y);
@@ -208,22 +195,18 @@ void spliner::write_text(std::string s, unsigned int x, unsigned int y)
 		glutBitmapCharacter(GLUT_BITMAP_HELVETICA_10, s[i]);
 }
 
-uint32_t spliner::knot_value(int j, int n, int d)
+uint32_t wavy::knot_value(int j, int n, int d)
 {
 	int value = 0;
 
-	if (uniformity == UNIFORM)     value = j;		// t[j+1] = t[j]+1
-	else if (uniformity == NON_UNIFORM)
-	{
-		if (j < d)				   value = 0;		// if (j < d) 				t[j] = 0;
-		else if (d <= j && j <= n) value = j-d+1;	// if (d <= j && j <= n)	t[j] = j-d+1;
-		else if (j > n)            value = n-d+2;	// if (j > n)				t[j] = n-d+2;
-	}
+	if (j < d)				   value = 0;		// if (j < d) 				t[j] = 0;
+	else if (d <= j && j <= n) value = j-d+1;	// if (d <= j && j <= n)	t[j] = j-d+1;
+	else if (j > n)            value = n-d+2;	// if (j > n)				t[j] = n-d+2;
 
 	return value;
 }
 
-void spliner::knot_vector(bool recalculate)
+void wavy::knot_vector(bool recalculate)
 {
 	// After adding the new knot value into the old knot vector, the parameters that needed to be computed are:
 	// 1) Uniform: 					t[m-1]
@@ -236,10 +219,7 @@ void spliner::knot_vector(bool recalculate)
 
 	if (n < d) return;
 
-	int j = n; // number of t values that need to be updated
-
-	// more knot values need modification (based on degree)
-	if (uniformity == NON_UNIFORM) j -= degree;
+	int j = n - degree; // number of t values that need to be updated
 
 	unsigned int start = j - 1 + d + 1;
 
@@ -256,7 +236,7 @@ void spliner::knot_vector(bool recalculate)
 	}
 }
 
-float spliner::basis_function(int j, int d, float u)
+float wavy::basis_function(int j, int d, float u)
 {
 	// Compute B[j,d](u) (all basis functions)
 
@@ -292,13 +272,12 @@ float spliner::basis_function(int j, int d, float u)
 	}
 }
 
-void spliner::spline()
+void wavy::spline()
 {
 	int n = (int)cps.size() - 1;	// one less than the number of control points
 	int d = degree + 1;				// either three (quadratic) or four (cubic)
 	if (n < d) return;				// the value of n must be equal or larger to d before a curve can be computed
 	q.clear();						// remove all previous segments if we want to recalculate
-		
 
 	// variable 'u' must be between t[d-1] and t[n+1])
 	for (float u = (float)t[d-1]; u <= (float)t[n+1]; u += U_INTERVAL)
@@ -320,5 +299,5 @@ void spliner::spline()
 	}
 
 	// add a final segment to the curve explicitly when it has just been intialized (this is no longer needed for new points)
-	if (n == d && uniformity == NON_UNIFORM) q.push_back(glm::vec2(cps.back().x, cps.back().y));
+	if (n == d) q.push_back(glm::vec2(cps.back().x, cps.back().y));
 }

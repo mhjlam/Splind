@@ -1,9 +1,12 @@
 #pragma once
-#include "constants.h"
-#include "vec2.hpp"
-#include <vector>
 
-class spliner
+#include "constants.h"
+
+#include <string>
+#include <vector>
+#include <glm/vec2.hpp>
+
+class wavy
 {
 private:
 	int acp;						// active control point (an index of cps)
@@ -13,17 +16,15 @@ private:
 	std::vector<int> t;				// knot vector
 	std::vector<glm::vec2> q;		// segments of the curve
 
+public:
 	enum MouseMode mode;
 	enum PolyDegree degree;
-	enum Uniformity uniformity;
-
-	bool draw_cp_lines = true;
+	bool draw_cps = true;
 
 public:
-	spliner();
-	~spliner();
+	wavy();
+	~wavy();
 
-public:
 	void add_cp(glm::vec2 p);		// add new control point at given x and y
 	void move_cp(glm::vec2 p);		// move active control point to new position
 	bool select_cp(glm::vec2 p);
@@ -44,4 +45,3 @@ public:
 	float basis_function(int j, int d, float u);
 	void spline();
 };
-
