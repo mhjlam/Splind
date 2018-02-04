@@ -1,5 +1,5 @@
 # wavy
-Quadratic and cubic drawing of B-splines.
+Quadratic and cubic B-splines.
 
 ## Usage
 Use the left mouse button to add control points.
