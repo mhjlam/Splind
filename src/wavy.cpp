@@ -177,7 +177,7 @@ void wavy::draw()
 void wavy::draw_ui()
 {
 	std::stringstream ss;
-	ss << "Coordinates: (" << mpos.x << ", " << mpos.y << ")";
+	ss << "Coords: (" << mpos.x << ", " << mpos.y << ")";
 	write_text(ss.str(), 1, 10);
 
 	std::stringstream().swap(ss);
@@ -192,7 +192,7 @@ void wavy::write_text(std::string s, unsigned int x, unsigned int y)
 	glRasterPos2i(x, y);
 
 	for (int i = 0; i < (int)s.length(); i++)
-		glutBitmapCharacter(GLUT_BITMAP_HELVETICA_10, s[i]);
+		glutBitmapCharacter(GLUT_BITMAP_8_BY_13, s[i]);
 }
 
 uint32_t wavy::knot_value(int j, int n, int d)
