@@ -1,4 +1,4 @@
-# wavy
+# Splind
 Quadratic and cubic B-splines.
 
 ## Usage
